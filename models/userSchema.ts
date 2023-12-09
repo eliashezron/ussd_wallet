@@ -16,7 +16,7 @@ const userSchema : Schema = new Schema({
     mnemonic: {
         type: String,
       },
-    PublicKey: {
+    PublicAddress: {
         type: String,
         required: true,
     },
@@ -35,6 +35,6 @@ const userSchema : Schema = new Schema({
  },
 );
 
-const userSchemaModel: any = mongoose.model(`orders`, userSchema)
+const User: any = mongoose.model(`orders`, userSchema)
 
-export default userSchemaModel
+export default User
