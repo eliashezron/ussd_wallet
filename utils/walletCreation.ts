@@ -2,7 +2,7 @@ import { ethers, Wallet } from "ethers"
 import User from '../models/userSchema';
 import { encrypt } from '../Encryption/encrypt';
 
-const createWallet = async (phoneNumber) => {
+const createWallet = async (phoneNumber:string) => {
     try {
         const isUser = await User.findOne({ phoneNumber: phoneNumber });
         if (isUser) {
@@ -21,8 +21,9 @@ const createWallet = async (phoneNumber) => {
         });
         await user.save();
         return wallet;
-    } catch (error) {
-        
+    } catch (error: any) {
+        console.error(error);
+        throw error;
     }
 };
 
