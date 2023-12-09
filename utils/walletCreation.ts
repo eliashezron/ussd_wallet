@@ -7,8 +7,15 @@ import {
   } from "abstractionkit";
 const createWallet = async (phoneNumber:string) => {
     try {
-        const isUser = await User.findOne({ phoneNumber: phoneNumber });
+        if (!phoneNumber) {
+            throw new Error('Invalid phone number');
+        }
+
+        const isUser = await User.findOne({ phoneNumber: phoneNumber as string });
+        console.log('Is User:', isUser);
+
         if (isUser) {
+            console.log('User already exists');
             throw new Error('User already exists');
         }
         const bundlerUrl = process.env.BUNDLER_URL as string;

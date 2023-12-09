@@ -5,7 +5,7 @@ import createWallet from './utils/walletCreation';
 import User from './models/userSchema';
 import mongoose from 'mongoose';
 import UssdMenu from "ussd-menu-builder";
-import {callTx }from './utils/calls';
+import {callTx, getNativeBalance, getCusdBalance }from './utils/calls';
 
 
 const menu = new UssdMenu();
@@ -35,26 +35,26 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-app.post('/create', async (req, res) => {
+app.post('/create',  async (req, res) => {
   try {
-    const { phoneNumber } = req.body;
-    const wallet = await createWallet(phoneNumber);
-    res.status(200).json({
-      status: 'success',
-      data: wallet,
-    });
-    console.log(wallet);
-  } catch (error) {
-    res.status(400).json({
-      status: 'failed',
-      error: error
-    });
-  }
-});
+  const { phoneNumber } = req.body;
+  const wallet = await createWallet(phoneNumber);
+  res.status(200).json({
+    status: 'success',
+    data: wallet,
+  });
+  console.log(wallet);
+} catch (error) {
+  res.status(400).json({
+    status: 'failed',
+    error: error
+  });
+}})
+
 app.post('/tx', async (req, res) => {
   try {
     const { phoneNumber } = req.body;
-    const wallet = await callTx(phoneNumber);
+    const wallet = await getNativeBalance(phoneNumber);
     res.status(200).json({
       status: 'success',
       data: wallet,
@@ -70,7 +70,15 @@ app.post('/tx', async (req, res) => {
 
 menu.startState({
   run: () => {
-      menu.con(`Welcome to the celo USSD blockchain app`);
+      menu.con('Welcome to the celo USSD blockchain app' +
+          '\n1. Create Wallet' +
+          '\n2. Check Balance' +
+          '\n3. Send Money' +
+          '\n4. Receive Money' +
+          '\n5. Buy Airtime' +
+          '\n6. Buy Data' +
+          '\n7. Check Wallet' +
+          '\n8. Exit');
   },
   next: {
       '1': 'createWallet',
@@ -95,9 +103,34 @@ menu.state('createWallet.confirm', {
   run: async () => {
     const phoneNumber: string | undefined = menu.val; 
       const wallet = await createWallet(phoneNumber);
-      menu.end(`Your wallet address is ${wallet.address}`);
+      menu.con(`Your new wallet address is ` + `\n ${wallet.address}`+
+      '\n1. end' );
+  },
+  next: {
+    '1': 'end'
   }
 });
+menu.state('checkBalance', {
+  run: () => {
+      menu.con('Enter your phone number');
+  },
+  next: {
+      '*[0-9]+': 'checkBalance.confirm'
+  }
+});
+menu.state('checkBalance.confirm', {
+  run: async () => {
+    const phoneNumber: string | undefined = menu.val; 
+      const celoBalance = await getNativeBalance(phoneNumber);
+      const CusdBalance = await getCusdBalance(phoneNumber);     
+      menu.con(`Your wallet balance is` + `\n Celo :${celoBalance} `+ `\n CUSD :${CusdBalance}` +
+      '\n1. end' );
+  },
+  next: {
+    '1': 'end'
+  }
+});
+
 menu.state('end', {
   run: () => {
       menu.end(`send and recieve funds with your new wallet`);
@@ -118,4 +151,4 @@ app.post('/ussd', (req, res) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
-});
+});   
