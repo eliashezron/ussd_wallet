@@ -5,7 +5,7 @@ import createWallet from './utils/walletCreation';
 import User from './models/userSchema';
 import mongoose from 'mongoose';
 import UssdMenu from "ussd-menu-builder";
-import callTx from './utils/calls';
+import {callTx }from './utils/calls';
 
 
 const menu = new UssdMenu();

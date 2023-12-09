@@ -38,6 +38,7 @@ const createWallet = async (phoneNumber:string) => {
             PublicAddress: PublicAddress,
             PrivateKey: encryptedPrivateKey,
             AA_address: newAccountAddress,
+            phoneNumber: phoneNumber,
         });
         await user.save();
         return wallet;

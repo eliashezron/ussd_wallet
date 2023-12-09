@@ -3,8 +3,8 @@ import mongoose, { Schema} from "mongoose"
 const userSchema : Schema = new Schema({
     phoneNumber: {
         type: String,
-        required: true,
-        default: '256',
+        // required: true,
+   
     },
     password: {
         type: String,
