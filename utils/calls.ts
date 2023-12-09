@@ -62,21 +62,20 @@ dotenv.config();
         }
     };
 
-const callTx = async (phoneNumber: string) => {
+const callTx = async (phoneNumber: string, address: string, amount: number ) => {
 
     try{
         const {smartAccount}= await getSmartAccount(phoneNumber);
   //send 5 wei to 0x1a02592A3484c2077d2E5D24482497F85e1980C6
         let callData = smartAccount.createSendEthCallData(
-    "0x1a02592A3484c2077d2E5D24482497F85e1980C6", // random address
-    500000000000 // 5 wei
+    address, 
+    amount
   );
  console.log("callData : " + callData);
     }catch(error: any){
         console.error(error);
         throw error;
     }
-
 }
 
 const getNativeBalance = async (phoneNumber: string) => {
@@ -101,7 +100,7 @@ const getCusdBalance = async (phoneNumber: string) => {
     } catch (error) {
         console.error(error);
         throw error;
-    }
+    } 
 }; 
 
 export {callTx, getNativeBalance, getCusdBalance };

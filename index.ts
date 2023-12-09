@@ -103,8 +103,10 @@ menu.state('createWallet.confirm', {
   run: async () => {
     const phoneNumber: string | undefined = menu.val; 
       const wallet = await createWallet(phoneNumber);
-      menu.con(`Your new wallet address is ` + `\n ${wallet.address}`+
-      '\n1. end' );
+      const firstLine = wallet.address.slice(0, 20);
+      const secondLine = wallet.address.slice(20);
+      menu.con(`Your new wallet address is: \n${firstLine}-${secondLine}`+
+            '\n1. end');
   },
   next: {
     '1': 'end'
@@ -124,6 +126,66 @@ menu.state('checkBalance.confirm', {
       const celoBalance = await getNativeBalance(phoneNumber);
       const CusdBalance = await getCusdBalance(phoneNumber);     
       menu.con(`Your wallet balance is` + `\n Celo :${celoBalance} `+ `\n CUSD :${CusdBalance}` +
+      '\n1. end' );
+  },
+  next: {
+    '1': 'end'
+  }
+});
+menu.state('sendMoney', {
+  run: () => {
+      menu.con('Enter your phone number');
+  },
+  next: {
+      '*[0-9]+': 'selectCurrencyToSend'
+  }
+});
+menu.state('selectCurrencyToSend', {
+  run: async() => {
+    const phoneNumber: string | undefined = menu.val; 
+    const celoBalance = await getNativeBalance(phoneNumber);
+    const CusdBalance = await getCusdBalance(phoneNumber);
+      menu.con('Select currency to send' +
+      '\n1. Celo' + `: ${celoBalance} ` +
+      '\n2. CUSD:' + `: ${CusdBalance} `);
+  },
+  next: {
+      '1': 'Celo',
+      '2': 'CUSD'
+  }
+});
+menu.state('Celo', {
+  run: () => {
+      menu.con('Enter amount to send');
+  },
+  next: {
+      '*[0-9]+': 'Celo.confirm'
+  }
+});
+menu.state('Celo.confirm', {
+  run: async () => {
+    const phoneNumber: string | undefined = menu.val; 
+      const celoBalance = await getNativeBalance(phoneNumber);
+      menu.con(`Your wallet balance is ${celoBalance}` +
+      '\n1. end' );
+  },
+  next: {
+    '1': 'end'
+  }
+});
+menu.state('CUSD', {
+  run: () => {
+      menu.con('Enter amount to send');
+  },
+  next: {
+      '*[0-9]+': 'CUSD.confirm'
+  }
+});
+menu.state('CUSD.confirm', {
+  run: async () => {
+    const phoneNumber: string | undefined = menu.val; 
+      const CusdBalance = await getCusdBalance(phoneNumber);
+      menu.con(`Your wallet balance is ${CusdBalance}` +
       '\n1. end' );
   },
   next: {
