@@ -4,10 +4,11 @@ const userSchema : Schema = new Schema({
     phoneNumber: {
         type: String,
         required: true,
+        default: '256',
     },
     password: {
         type: String,
-        required: true,
+        // required: false,
     },
     country: {
         type: String,
@@ -18,15 +19,15 @@ const userSchema : Schema = new Schema({
       },
     PublicAddress: {
         type: String,
-        required: true,
+        // required: false,
     },
     PrivateKey: {
         type: String,
-        required: true,
+        // required: false,
     },
     AA_address: {
         type: String,
-        required: true,
+        // required: true,
     },
     createdAt: {
         type: Date,
@@ -35,6 +36,6 @@ const userSchema : Schema = new Schema({
  },
 );
 
-const User: any = mongoose.model(`orders`, userSchema)
+const User: any = mongoose.model(`wallets`, userSchema)
 
 export default User
