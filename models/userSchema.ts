@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema} from "mongoose"
 
-const userSchema = new mongoose.Schema({
+const userSchema : Schema = new Schema({
     phoneNumber: {
         type: String,
         required: true,
@@ -34,3 +34,7 @@ const userSchema = new mongoose.Schema({
     }, 
  },
 );
+
+const userSchemaModel: any = mongoose.model(`orders`, userSchema)
+
+export default userSchemaModel
