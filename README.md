@@ -1,3 +1,10 @@
+ETHINDIA: USSD BASED CELO BLOCKCHAIN WALLET FOR ETH_INDIA SUBMISSION
+---
+
+https://github.com/eliashezron/ussd_wallet/assets/60871378/519f75c2-02aa-4956-8f06-2a3d69b3c51a
+
+---
+
 **Introduction:**
 In a bid to foster financial inclusion and overcome the barriers posed by expensive data costs in Sub-Saharan Africa, our blockchain wallet for feature phones emerges as a transformative solution. By providing a user-friendly interface and essential functionalities, this wallet aims to empower individuals who previously faced exclusion from the benefits of blockchain technology.
 
