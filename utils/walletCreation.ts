@@ -3,8 +3,9 @@ import User from '../models/userSchema';
 import { encrypt } from '../Encryption/encrypt';
 import {
     Bundler,
-    CandideAccount,
+    CandideAccount
   } from "abstractionkit";
+import e from "express";
 const createWallet = async (phoneNumber:string) => {
     try {
         if (!phoneNumber) {
@@ -19,29 +20,32 @@ const createWallet = async (phoneNumber:string) => {
             throw new Error('User already exists');
         }
         const bundlerUrl = process.env.BUNDLER_URL as string;
-  const entrypointAddress = process.env.ENTRYPOINT_ADDRESS as string;
-//   const privateKey = process.env.PRIVATE_KEY as string;
-        // Define our Bundler endpoint where we will be sending our userOp
-  const bundler: Bundler = new Bundler(bundlerUrl, entrypointAddress);
+        const entrypointAddress = process.env.ENTRYPOINT_ADDRESS as string;
+        
+
+         const bundler: Bundler = new Bundler(bundlerUrl, entrypointAddress);
   
-  // Initiate the owner of our Candide Account (EOA)
-//   const eoaSigner = new Wallet(privateKey);
+     // Initiate the owner of our Candide Account (EOA)
+    //   const eoaSigner = new Wallet(privateKey);
   
-  const smartAccount = new CandideAccount();
+        const smartAccount = new CandideAccount();
+        console.log('Smart Account:', smartAccount);
         const wallet = Wallet.createRandom();
-        const encryptedMnemonic = await encrypt(wallet.mnemonic.phrase);
+        
         const encryptedPrivateKey = await encrypt(wallet.privateKey);
+        console.log('decryptedPrivate Key:', wallet.privateKey);
         const PublicAddress = await wallet.address;
-        // const encryptedAddress = await wallet.address;
+        
         const eoaSigner = new Wallet(wallet.privateKey);
-         // Generate the new account address and initCode
+        // Generate the new account address and initCode
      let [newAccountAddress, initCode] = smartAccount.createNewAccount([
     eoaSigner.address,
     ]);
     console.log("Account Abstraction address(sender) : " + newAccountAddress);
     console.log("Account address : " + wallet.address);
+    // console.log("initCode : " + initCode);
         const user = new User({
-            mnemonic: encryptedMnemonic,
+            // mnemonic: encryptedMnemonic,
             PublicAddress: PublicAddress,
             PrivateKey: encryptedPrivateKey,
             AA_address: newAccountAddress,
