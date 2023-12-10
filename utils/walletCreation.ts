@@ -52,7 +52,7 @@ const createWallet = async (phoneNumber:string) => {
             phoneNumber: phoneNumber,
         });
         await user.save();
-        return wallet;
+        return {wallet, newAccountAddress};
     } catch (error: any) {
         console.error(error);
         throw error;

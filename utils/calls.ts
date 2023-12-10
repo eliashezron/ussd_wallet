@@ -15,7 +15,8 @@ dotenv.config();
     const bundlerUrl = process.env.BUNDLER_URL as string;
     const entrypointAddress = process.env.ENTRYPOINT_ADDRESS as string;
     const bundler: Bundler = new Bundler(bundlerUrl, entrypointAddress);
-    const getSmartAccount = async (phoneNumber: string) => {
+    
+    const getSmartAccount = async (phoneNumber: string) =>  {
         try {
             const user = await User.findOne({phoneNumber });
             if (!user) {
@@ -35,7 +36,7 @@ dotenv.config();
         } catch (error) {
             console.error(error);
         throw error;
-        }
+        } 
     };
 
 const callTx = async (phoneNumber: string) => {
@@ -110,7 +111,19 @@ const getNativeBalance = async (phoneNumber: string) => {
         const {eoaSigner} = await getSmartAccount(phoneNumber);
         const balance = await provider.getBalance(eoaSigner.address);
         console.log("balance : " + balance);
-        // return ethers.utils.formatEther(balance.toString());
+        return ethers.formatEther(balance.toString());
+        return balance;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};  
+const getAABalance = async (phoneNumber: string) => {
+    try {
+        const {newAccountAddress,} = await getSmartAccount(phoneNumber);
+        const balance = await provider.getBalance(newAccountAddress);
+        console.log("balance : " + balance);
+        return ethers.formatEther(balance.toString());
         return balance;
     } catch (error) {
         console.error(error);
@@ -121,10 +134,10 @@ const getCusdBalance = async (phoneNumber: string) => {
     try {
         const {eoaSigner} = await getSmartAccount(phoneNumber);
         const cusdAddress = "0x874069fa1eb16d44d622f2e0ca25eea172369bc1"
-        const cusdContract = new ethers.Contract(cusdAddress, abi, eoaSigner);
+        const cusdContract = new ethers.Contract(cusdAddress, abi, provider);
         const balance = await cusdContract.balanceOf(eoaSigner.address);
         // console.log("balance : " + ethers.utils.formatEther(balance.toString()));
-        // return ethers.utils.parseEther(balance.toString());
+        return ethers.parseEther(balance.toString());
         return balance;
     } catch (error) {
         console.error(error);
@@ -132,4 +145,4 @@ const getCusdBalance = async (phoneNumber: string) => {
     } 
 }; 
 
-export {callTx, getNativeBalance, getCusdBalance };
+export {callTx, getNativeBalance, getCusdBalance , getAABalance, getSmartAccount};
